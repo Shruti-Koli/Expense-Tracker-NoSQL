@@ -7,7 +7,7 @@ const S3services = require('../services/S3services');
 
 const getPrevFiles = async (req, res) => {
   try {
-    const prevdata = await PreviousDownloads.find({ userId: req.user._id });
+    const prevdata = await PreviousDownloads.find({ user: req.user._id });
     res.status(200).json(prevdata);
   } catch (err) {
     console.error(err);

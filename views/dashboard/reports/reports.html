@@ -40,9 +40,10 @@
           try{
               const token = localStorage.getItem('token');
               const userReportsArray = await axios.get('http://localhost:3000/premium/getoldreports', {headers:{"auth":token}})
-
+              console.log("------------");
+              console.log(userReportsArray);
               for(let i=0;i<userReportsArray.data.length;i++){
-                const time = userReportsArray.data[i].updatedAt.substring(0,16).replace("T", " ");
+                const time = userReportsArray.data[i].createdAt.replace("T", " ");
                 const url = userReportsArray.data[i].fileURL
                 showItemOnScreen(time,url)
               }
