@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
-
+require('dotenv').config();
 const path=require('path');
 // const mongoConnect = require('./util/database');
 
@@ -30,11 +30,8 @@ app.use('/purchase',purchaseRoutes);
 app.use('/premium',premiumRoutes);
 app.use('/password',passwordRoutes);
 
-// app.use((req,res,next)=>{
-//     res.sendFile(path.join(__dirname,`views/${req.url}`))
-// });
 
-mongoose.connect('mongodb+srv://user1:user1user1@cluster0.gshg64l.mongodb.net/')
+mongoose.connect(process.env.MONGO_URL)
   .then(result=>{
     app.listen(3000)
   }).catch((err)=>{

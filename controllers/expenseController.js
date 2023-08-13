@@ -18,7 +18,7 @@ exports.getExpenses = async (req, res, next) => {
       const totalExpenses = await Expense.countDocuments({ user: req.user._id });
   
       const data = await Expense.find({ user: req.user._id })
-        .sort({ id: -1 })
+        .sort({ _id: -1 })
         .skip((page - 1) * pageSize)
         .limit(pageSize);
   
@@ -41,31 +41,22 @@ exports.getExpenses = async (req, res, next) => {
   exports.deleteExpense = async (req, res, next) => {
     try {
       if (!req.params.id || req.params.id === 'undefined') {
-        // Check for valid ID
+
         return res.status(400).json({ message: 'ID is missing' });
       }
-  
       const uId = req.params.id;
       const expense = await Expense.findById(uId);
-  
       if (!expense || expense.user.toString() !== req.user._id.toString()) {
-        // Check if the expense exists and belongs to the current user
         return res.status(500).json({ success: false, message: 'You can not delete this expense' });
       }
-  
       const user = await User.findById(req.user._id);
-  
       if (!user) {
         return res.status(500).json({ success: false, message: 'User not found' });
       }
-  
       const price = expense.price;
       const totalExpense = user.totalExpense - price;
-  
       await user.updateOne({ totalExpense: totalExpense });
-  
       await Expense.deleteOne({ _id: uId });
-  
       res.status(200).json({ success: true, message: 'Deleted' });
     } catch (err) {
       console.error(err);
